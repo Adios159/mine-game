@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://q8eo6nfb5vxk"]
+
+[ext_resource type="Script" uid="uid://dcxe4wgr8osr7" path="res://scripts/Game.cs" id="1_ibkli"]
+[ext_resource type="PackedScene" uid="uid://narqstyrx631" path="res://scenes/Rock.tscn" id="2_cpr0p"]
+[ext_resource type="PackedScene" uid="uid://bgplwgy6p7jj2" path="res://scenes/Player.tscn" id="2_qbsmt"]
+[ext_resource type="Script" uid="uid://hv5fhregmko7" path="res://scripts/systems/RockSpawner.cs" id="3_cpr0p"]
+[ext_resource type="Script" uid="uid://dhx21ea3yw3yj" path="res://scripts/systems/UnlockSystem.cs" id="3_kiw3p"]
+[ext_resource type="Script" uid="uid://dvr8bbhwqwcyt" path="res://scripts/systems/ScoreSystem.cs" id="4_400sg"]
+[ext_resource type="Script" uid="uid://chf2dusetwt4j" path="res://scripts/systems/DropSystem.cs" id="5_g4kob"]
+
+[node name="Game" type="Node2D" unique_id=159033301]
+script = ExtResource("1_ibkli")
+
+[node name="Rocks" type="Node2D" parent="." unique_id=991525829]
+position = Vector2(300, 112)
+
+[node name="Drills" type="Node2D" parent="." unique_id=578662205]
+
+[node name="Ores" type="Node2D" parent="." unique_id=1980976939]
+
+[node name="Items" type="Node2D" parent="." unique_id=1691512556]
+
+[node name="Player" parent="." unique_id=1101318778 instance=ExtResource("2_qbsmt")]
+position = Vector2(240, 112)
+
+[node name="Systems" type="Node2D" parent="." unique_id=1211595768]
+
+[node name="Stats" type="Node2D" parent="Systems" unique_id=1460902464]
+
+[node name="UnlockSystem" type="Node2D" parent="Systems" unique_id=1491933912]
+script = ExtResource("3_kiw3p")
+
+[node name="ScoreSystem" type="Node2D" parent="Systems" unique_id=1612423526]
+script = ExtResource("4_400sg")
+
+[node name="DropSystem" type="Node2D" parent="Systems" unique_id=1093983347]
+script = ExtResource("5_g4kob")
+
+[node name="RockSpawner" type="Node2D" parent="Systems" unique_id=53124452]
+script = ExtResource("3_cpr0p")
+RockScene = ExtResource("2_cpr0p")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=507914634]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=200887009]
+position = Vector2(240, 135)

@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://narqstyrx631"]
+
+[ext_resource type="Texture2D" uid="uid://c3r5kbikygfuf" path="res://icon.svg" id="1_bpoff"]
+[ext_resource type="Script" uid="uid://c5ictfj7hs2u4" path="res://scripts/Rock.cs" id="1_wmx41"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_a42wu"]
+radius = 7.0
+
+[node name="Rock" type="Node2D" unique_id=150530624]
+script = ExtResource("1_wmx41")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=236979302]
+modulate = Color(0.61510515, 0.4435417, 0.2596624, 1)
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("1_bpoff")
+
+[node name="Body" type="StaticBody2D" parent="." unique_id=1238291618]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body" unique_id=1082617345]
+shape = SubResource("CircleShape2D_a42wu")
