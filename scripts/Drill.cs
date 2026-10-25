@@ -1,4 +1,4 @@
-// Drill: 돌덩이에 붙어 일정 시간 뒤 돌 1개를 캐고, 끝나면 돌덩이 주변에 떨어진다.
+// Drill: 돌덩이에 붙어 일정 시간 뒤 돌 1개를 캐고, 끝나면 돌덩이 주변에 떨어진다. 폭탄이 설치되면 채굴을 취소하고 바로 떨어진다.
 using Godot;
 
 public partial class Drill : Node2D
@@ -8,6 +8,7 @@ public partial class Drill : Node2D
 	public Rock Target;
 	public bool Shiny;
 	public bool Dropped;
+	public bool Collected;
 	private Timer _timer;
 
 	public void Start(Rock target, bool shiny, float seconds)
@@ -20,6 +21,15 @@ public partial class Drill : Node2D
 		AddChild(_timer);
 		_timer.Timeout += OnTimeout;
 		_timer.Start();
+		QueueRedraw();
+	}
+
+	public void Cancel()
+	{
+		if (Dropped) return;
+		_timer.Stop();
+		Dropped = true;
+		GlobalPosition = Target.GlobalPosition + Vector2.FromAngle(GD.Randf() * Mathf.Tau) * 13f;
 		QueueRedraw();
 	}
 

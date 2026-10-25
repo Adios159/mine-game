@@ -4,6 +4,7 @@ using Godot;
 public partial class Player : CharacterBody2D
 {
 	public bool Active = true;
+	public float MoveSpeed = GameData.BaseMoveSpeed;
 
 	public override void _Ready()
 	{
@@ -18,7 +19,7 @@ public partial class Player : CharacterBody2D
 		if (!Active) { Velocity = Vector2.Zero; return; }
 
 		Vector2 dir = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-		Velocity = dir * GameData.BaseMoveSpeed * GameData.TileSize;
+		Velocity = dir * MoveSpeed * GameData.TileSize;
 		MoveAndSlide();
 
 		GlobalPosition = new Vector2(

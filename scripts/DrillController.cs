@@ -4,11 +4,12 @@ using Godot;
 public partial class DrillController : Node
 {
 	private const int InitialDrills = 3;
-	private const float MineSeconds = 5f;
-	private const float ReachTiles = 1.5f;
 	private const float PickRadiusPx = 10f;
 	private const float PickupRadiusPx = 10f;
 	private const float ShinyChance = 0.15f;
+
+	public float MineSeconds = 5f;
+	public float ReachTiles = 1.5f;
 
 	public Node2D Player;
 	public Node2D Rocks;
@@ -26,8 +27,9 @@ public partial class DrillController : Node
 	{
 		foreach (Node n in Drills.GetChildren())
 		{
-			if (n is Drill d && d.Dropped && d.GlobalPosition.DistanceTo(Player.GlobalPosition) <= PickupRadiusPx)
+			if (n is Drill d && d.Dropped && !d.Collected && d.GlobalPosition.DistanceTo(Player.GlobalPosition) <= PickupRadiusPx)
 			{
+				d.Collected = true;
 				DrillsLeft++;
 				d.QueueFree();
 				GD.Print("드릴 회수, 남은 드릴 ", DrillsLeft);
@@ -43,7 +45,7 @@ public partial class DrillController : Node
 		float bestDist = PickRadiusPx;
 		foreach (Node n in Rocks.GetChildren())
 		{
-			if (n is not Rock r || r.Drilling) continue;
+			if (n is not Rock r || r.Drilling || r.Bombed) continue;
 			float d = r.GlobalPosition.DistanceTo(mouse);
 			if (d < bestDist) { best = r; bestDist = d; }
 		}
@@ -59,6 +61,7 @@ public partial class DrillController : Node
 		Drills.AddChild(drill);
 		drill.Finished += OnDrillFinished;
 		drill.Start(best, GD.Randf() < ShinyChance, MineSeconds);
+		best.AttachedDrill = drill;
 		GD.Print("드릴 부착, 남은 드릴 ", DrillsLeft, drill.Shiny ? " (반짝)" : "");
 	}
 
@@ -67,6 +70,7 @@ public partial class DrillController : Node
 		Rock rock = drill.Target;
 		rock.Stones--;
 		rock.Drilling = false;
+		rock.AttachedDrill = null;
 		Drops.SpawnFromStone(rock.GlobalPosition, drill.Shiny);
 		GD.Print("채굴 완료, 돌덩이에 남은 돌 ", rock.Stones);
 		if (rock.Stones <= 0)

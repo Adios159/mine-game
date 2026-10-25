@@ -1,35 +1,33 @@
-// Vision: 열쇠 구멍 시야. 플레이어 주위의 원 조명과 마우스 방향 부채꼴 조명을 코드로 만든다.
+// Vision: 열쇠 구멍 시야. 플레이어 주위의 원 조명과 마우스 방향 부채꼴 조명을 코드로 만들고, 해금 때 크기를 늘린다.
 using Godot;
 
 public partial class Vision : Node2D
 {
 	private const int TexSize = 256;
-	private const float CircleRadiusTiles = 1.5f;
-	private const float FanLengthTiles = 3f;
 	private const float FanAngleDeg = 70f;
 
+	public float CircleRadiusTiles = 1.5f;
+	public float FanLengthTiles = 3f;
+
+	private PointLight2D _circle;
 	private PointLight2D _fan;
 
 	public override void _Ready()
 	{
-		float half = TexSize / 2f;
-		float tile = (float)GameData.TileSize;
+		_circle = new PointLight2D { Texture = MakeTexture(false), Energy = 1f };
+		AddChild(_circle);
 
-		var circle = new PointLight2D
-		{
-			Texture = MakeTexture(false),
-			TextureScale = CircleRadiusTiles * tile / half,
-			Energy = 1f
-		};
-		AddChild(circle);
-
-		_fan = new PointLight2D
-		{
-			Texture = MakeTexture(true),
-			TextureScale = FanLengthTiles * tile / half,
-			Energy = 1f
-		};
+		_fan = new PointLight2D { Texture = MakeTexture(true), Energy = 1f };
 		AddChild(_fan);
+
+		Apply();
+	}
+
+	public void Expand(float fanAddTiles, float circleAddTiles)
+	{
+		FanLengthTiles += fanAddTiles;
+		CircleRadiusTiles += circleAddTiles;
+		Apply();
 	}
 
 	public override void _Process(double delta)
@@ -37,6 +35,14 @@ public partial class Vision : Node2D
 		Vector2 dir = GetGlobalMousePosition() - GlobalPosition;
 		if (dir.LengthSquared() > 0.0001f)
 			_fan.GlobalRotation = dir.Angle();
+	}
+
+	private void Apply()
+	{
+		float half = TexSize / 2f;
+		float tile = (float)GameData.TileSize;
+		_circle.TextureScale = CircleRadiusTiles * tile / half;
+		_fan.TextureScale = FanLengthTiles * tile / half;
 	}
 
 	private static ImageTexture MakeTexture(bool fan)
