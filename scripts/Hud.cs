@@ -28,8 +28,8 @@ public partial class Hud : Node
 		_api = new ApiClient();
 		AddChild(_api);
 
-		_top = MakeLabel(this, new Vector2(4, 227), 10);
-		_bottom = MakeLabel(this, new Vector2(4, 243), 10);
+		_top = MakeLabel(this, new Vector2(4, 227), 12);
+		_bottom = MakeLabel(this, new Vector2(4, 243), 12);
 
 		_result = new ColorRect
 		{
@@ -41,7 +41,7 @@ public partial class Hud : Node
 		};
 		AddChild(_result);
 
-		_summary = MakeLabel(_result, new Vector2(10, 6), 14);
+		_summary = MakeLabel(_result, new Vector2(10, 6), 12);
 		_status = MakeLabel(_result, new Vector2(10, 50), 12);
 		_list = MakeLabel(_result, new Vector2(10, 88), 12);
 

@@ -1,3 +1,4 @@
+// Title: 첫 화면. 게임 시작, 랭킹 보기, 게임 설명 메뉴를 두고, 게임 시작을 누르면 학번, 이름, 학과 입력 화면에서 입력 확인과 판 시작을 처리한 뒤 게임 씬으로 넘어간다.
 using Godot;
 using System;
 using System.Globalization;
@@ -41,6 +42,9 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 [랭킹]
 학번당 최대 3번 플레이할 수 있고 가장 높은 점수만 순위에 반영됩니다.
 중간에 끈 판도 횟수가 차감됩니다. 점수가 같으면 먼저 달성한 사람이 위입니다.";
+
+	private const int FontSize = 12;
+	private const int BigFontSize = 24;
 
 	private static readonly int[] RankColumns = { 36, 80, 150, 70, 80 };
 
@@ -96,7 +100,7 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 	{
 		_main = MakePanel();
 
-		var title = MakeLabel(_main, "광물 채굴 게임", new Vector2(0, 36), 24);
+		var title = MakeLabel(_main, "광물 채굴 게임", new Vector2(0, 36), BigFontSize);
 		title.Size = new Vector2(480, 32);
 		title.HorizontalAlignment = HorizontalAlignment.Center;
 
@@ -105,7 +109,7 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 		var help = MakeButton(_main, "게임 설명", new Vector2(170, 164), new Vector2(140, 28));
 		_startMain.Disabled = true;
 
-		_server = MakeLabel(_main, "", new Vector2(10, 250), 12);
+		_server = MakeLabel(_main, "", new Vector2(10, 250), FontSize);
 		_retry = MakeButton(_main, "다시 시도", new Vector2(380, 244), new Vector2(90, 22));
 		_retry.Visible = false;
 
@@ -119,14 +123,14 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 	{
 		_entry = MakePanel();
 
-		var title = MakeLabel(_entry, "플레이어 정보 입력", new Vector2(0, 14), 18);
+		var title = MakeLabel(_entry, "플레이어 정보 입력", new Vector2(0, 8), FontSize);
 		title.Size = new Vector2(480, 24);
 		title.HorizontalAlignment = HorizontalAlignment.Center;
 		var back = MakeButton(_entry, "뒤로", new Vector2(10, 4), new Vector2(60, 22));
 
-		MakeLabel(_entry, "학번", new Vector2(60, 64), 14);
-		MakeLabel(_entry, "이름", new Vector2(60, 94), 14);
-		MakeLabel(_entry, "학과", new Vector2(60, 124), 14);
+		MakeLabel(_entry, "학번", new Vector2(60, 64), FontSize);
+		MakeLabel(_entry, "이름", new Vector2(60, 94), FontSize);
+		MakeLabel(_entry, "학과", new Vector2(60, 124), FontSize);
 		_id = MakeInput(_entry, "숫자 8자리", new Vector2(120, 60), new Vector2(240, 26), 8);
 		_name = MakeInput(_entry, "이름", new Vector2(120, 90), new Vector2(240, 26), 30);
 		_dept = MakeInput(_entry, "학과", new Vector2(120, 120), new Vector2(240, 26), 50);
@@ -134,7 +138,7 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 		_check = MakeButton(_entry, "입력 확인", new Vector2(120, 156), new Vector2(110, 24));
 		_start = MakeButton(_entry, "게임 시작", new Vector2(250, 156), new Vector2(110, 24));
 		_start.Disabled = true;
-		_message = MakeLabel(_entry, "", new Vector2(40, 190), 14);
+		_message = MakeLabel(_entry, "", new Vector2(40, 190), FontSize);
 		_message.Size = new Vector2(400, 70);
 		_message.HorizontalAlignment = HorizontalAlignment.Center;
 		_message.AutowrapMode = TextServer.AutowrapMode.WordSmart;
@@ -154,12 +158,12 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 	{
 		_rank = MakePanel();
 
-		var title = MakeLabel(_rank, "랭킹", new Vector2(0, 5), 16);
+		var title = MakeLabel(_rank, "랭킹", new Vector2(0, 8), FontSize);
 		title.Size = new Vector2(480, 22);
 		title.HorizontalAlignment = HorizontalAlignment.Center;
 		var back = MakeButton(_rank, "뒤로", new Vector2(10, 4), new Vector2(60, 22));
 
-		MakeLabel(_rank, "학번", new Vector2(10, 32), 12);
+		MakeLabel(_rank, "학번", new Vector2(10, 32), FontSize);
 		_rankId = MakeInput(_rank, "내 순위를 보려면 학번 입력", new Vector2(44, 28), new Vector2(190, 22), 8);
 		_rankLoad = MakeButton(_rank, "조회", new Vector2(240, 28), new Vector2(60, 22));
 
@@ -180,7 +184,7 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 		_rankScroll.AddChild(_rankGrid);
 		_rank.AddChild(_rankScroll);
 
-		_rankStatus = MakeLabel(_rank, "", new Vector2(10, 232), 11);
+		_rankStatus = MakeLabel(_rank, "", new Vector2(10, 232), FontSize);
 		_rankStatus.Size = new Vector2(460, 36);
 		_rankStatus.AutowrapMode = TextServer.AutowrapMode.WordSmart;
 
@@ -193,7 +197,7 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 	{
 		_help = MakePanel();
 
-		var title = MakeLabel(_help, "게임 설명", new Vector2(0, 5), 16);
+		var title = MakeLabel(_help, "게임 설명", new Vector2(0, 8), FontSize);
 		title.Size = new Vector2(480, 22);
 		title.HorizontalAlignment = HorizontalAlignment.Center;
 		var back = MakeButton(_help, "뒤로", new Vector2(10, 4), new Vector2(60, 22));
@@ -212,7 +216,7 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 			AutowrapMode = TextServer.AutowrapMode.WordSmart,
 			MouseFilter = MouseFilterEnum.Ignore
 		};
-		text.AddThemeFontSizeOverride("font_size", 12);
+		text.AddThemeFontSizeOverride("font_size", FontSize);
 		scroll.AddChild(text);
 		_help.AddChild(scroll);
 	}
@@ -345,7 +349,7 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 				ClipText = true,
 				MouseFilter = MouseFilterEnum.Ignore
 			};
-			label.AddThemeFontSizeOverride("font_size", 11);
+			label.AddThemeFontSizeOverride("font_size", FontSize);
 			if (i == 0 || i == 4) label.HorizontalAlignment = HorizontalAlignment.Right;
 			if (mine) label.Modulate = new Color(1f, 0.85f, 0.3f);
 			grid.AddChild(label);
@@ -481,7 +485,7 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 	private static LineEdit MakeInput(Control parent, string placeholder, Vector2 pos, Vector2 size, int maxLength)
 	{
 		var edit = new LineEdit { PlaceholderText = placeholder, Position = pos, Size = size, MaxLength = maxLength };
-		edit.AddThemeFontSizeOverride("font_size", 12);
+		edit.AddThemeFontSizeOverride("font_size", FontSize);
 		parent.AddChild(edit);
 		return edit;
 	}
@@ -489,7 +493,7 @@ D+E x1.4 / C+D x1.6 / B+C+D+E x2.6 / A+C+D+E x3.0 / A+B+C+E x3.3
 	private static Button MakeButton(Control parent, string text, Vector2 pos, Vector2 size)
 	{
 		var button = new Button { Text = text, Position = pos, Size = size };
-		button.AddThemeFontSizeOverride("font_size", 14);
+		button.AddThemeFontSizeOverride("font_size", FontSize);
 		parent.AddChild(button);
 		return button;
 	}

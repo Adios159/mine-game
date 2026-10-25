@@ -28,6 +28,10 @@ window/stretch/scale_mode="integer"
 
 project/assembly_name="MineGame"
 
+[gui]
+
+theme/custom_font="uid://qvmjjxpgbhfc"
+
 [input]
 
 move_up={
