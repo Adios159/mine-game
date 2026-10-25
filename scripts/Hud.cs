@@ -1,4 +1,4 @@
-// Hud: 아래 띠에 남은 시간, 점수, 배율, 광석 개수, 드릴 수를 보여 준다. 끝나면 결과 화면을 띄우고 점수를 서버에 제출해 순위를 보여 준다.
+// Hud: 아래 띠에 남은 시간, 점수, 배율, 광석 개수, 드릴 수를 보여 준다. 시작 때 카운트다운을 돌리고, 끝나면 '게임 종료' 문구 뒤에 결과 화면을 띄워 점수를 서버에 제출한다.
 using Godot;
 using System;
 using System.Text;
@@ -13,6 +13,7 @@ public partial class Hud : Node
 
 	private Label _top;
 	private Label _bottom;
+	private Label _center;
 	private ColorRect _result;
 	private Label _summary;
 	private Label _status;
@@ -30,6 +31,11 @@ public partial class Hud : Node
 
 		_top = MakeLabel(this, new Vector2(4, 227), 12);
 		_bottom = MakeLabel(this, new Vector2(4, 243), 12);
+
+		_center = MakeLabel(this, Vector2.Zero, 24);
+		_center.Size = new Vector2(GameData.MapWidthPx, GameData.MapHeightPx);
+		_center.HorizontalAlignment = HorizontalAlignment.Center;
+		_center.VerticalAlignment = VerticalAlignment.Center;
 
 		_result = new ColorRect
 		{
@@ -51,6 +57,7 @@ public partial class Hud : Node
 		_result.AddChild(_action);
 
 		Round.Ended += OnEnded;
+		StartCountdown();
 	}
 
 	public override void _Process(double delta)
@@ -61,13 +68,33 @@ public partial class Hud : Node
 		_bottom.Text = $"A {c[0]}  B {c[1]}  C {c[2]}  D {c[3]}  E {c[4]}   DRILL {Drills.DrillsLeft}   BOMB {(Drops.HasBomb ? 1 : 0)}";
 	}
 
+	// 트리를 멈춘 채 3, 2, 1을 센 뒤 풀어 준다. 타이머는 멈춘 트리에서도 돌아가야 해서 기본값(processAlways)을 그대로 쓴다.
+	private async void StartCountdown()
+	{
+		GetTree().Paused = true;
+		for (int n = GameData.CountdownSeconds; n >= 1; n--)
+		{
+			_center.Text = $"준비\n{n}";
+			await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);
+		}
+		_center.Text = "시작!";
+		GetTree().Paused = false;
+		await ToSignal(GetTree().CreateTimer(0.6), SceneTreeTimer.SignalName.Timeout);
+		_center.Text = "";
+	}
+
 	private async void OnEnded()
 	{
 		int[] c = Score.Counts;
 		int score = Score.Score();
+		GD.Print($"[결과] A{c[0]} B{c[1]} C{c[2]} D{c[3]} E{c[4]} | 합계 {Score.Sum()} | 배율 {Score.BestMultiplier():0.0} | 점수 {score}");
+
+		_center.Text = "게임 종료";
+		await ToSignal(GetTree().CreateTimer(GameData.EndBannerSeconds), SceneTreeTimer.SignalName.Timeout);
+		_center.Text = "";
+
 		_summary.Text = $"점수 {score}   x{Score.BestMultiplier():0.0}\n합계 {Score.Sum()}   A{c[0]} B{c[1]} C{c[2]} D{c[3]} E{c[4]}";
 		_result.Visible = true;
-		GD.Print($"[결과] A{c[0]} B{c[1]} C{c[2]} D{c[3]} E{c[4]} | 합계 {Score.Sum()} | 배율 {Score.BestMultiplier():0.0} | 점수 {score}");
 
 		if (!Session.HasPlay)
 		{

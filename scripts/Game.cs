@@ -74,7 +74,7 @@ public partial class Game : Node2D
 				GD.Print("[효과] 채굴 시간 ", drills.MineSeconds, "초 (새로 붙이는 드릴부터)");
 				break;
 			case OreType.B:
-				player.MoveSpeed += 5f;
+				player.MoveSpeed += GameData.UnlockMoveBonus;
 				GD.Print("[효과] 이동 속도 ", player.MoveSpeed);
 				break;
 			case OreType.C:

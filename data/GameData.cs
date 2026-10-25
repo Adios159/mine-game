@@ -33,7 +33,10 @@ public static class GameData
 
 	public const int StartDrills = 3;
 	public const float BaseMineSeconds = 5f;
-	public const float BaseMoveSpeed = 3f;        // 칸/초
+	public const float UnlockMoveBonus = 3.5f; 
+	public const int CountdownSeconds = 3;
+	public const float EndBannerSeconds = 2f; 
+	public const float BaseMoveSpeed = 3.5f;        // 칸/초
 	public const float BaseFanLength = 3f;        // 칸
 	public const float BaseCircleRadius = 1.5f;   // 칸
 	public const float FanAngleDeg = 70f;
