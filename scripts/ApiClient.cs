@@ -45,6 +45,14 @@ public class ApiResult
 			&& v.ValueKind == JsonValueKind.True;
 	}
 
+	public JsonElement GetObject(string name)
+	{
+		return Body.ValueKind == JsonValueKind.Object
+			&& Body.TryGetProperty(name, out JsonElement v)
+			&& v.ValueKind == JsonValueKind.Object
+			? v : default;
+	}
+
 	public List<JsonElement> GetArray(string name)
 	{
 		var list = new List<JsonElement>();
@@ -84,6 +92,13 @@ public partial class ApiClient : Node
 	public Task<ApiResult> Health()
 	{
 		return Send(Godot.HttpClient.Method.Get, "/health", null, null, 15f, 75f);
+	}
+
+	public Task<ApiResult> Ranking(string id = null)
+	{
+		string path = "/ranking?limit=500";
+		if (!string.IsNullOrEmpty(id)) path += "&student_id=" + id;
+		return Send(Godot.HttpClient.Method.Get, path, null, null, 15f, 60f);
 	}
 
 	public Task<ApiResult> Check(string id, string name, string dept)
