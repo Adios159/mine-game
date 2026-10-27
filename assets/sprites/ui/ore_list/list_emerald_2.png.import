@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dhlu788sdb04k"
-path="res://.godot/imported/list_C_4.png-69f855ba72e997414963aa170099c843.ctex"
+uid="uid://d2sya544nni5j"
+path="res://.godot/imported/list_emerald_2.png-53951b14ca2c8a80860ecdc75269846e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/ore_list/list_C_4.png"
-dest_files=["res://.godot/imported/list_C_4.png-69f855ba72e997414963aa170099c843.ctex"]
+source_file="res://assets/sprites/ui/ore_list/list_emerald_2.png"
+dest_files=["res://.godot/imported/list_emerald_2.png-53951b14ca2c8a80860ecdc75269846e.ctex"]
 
 [params]
 

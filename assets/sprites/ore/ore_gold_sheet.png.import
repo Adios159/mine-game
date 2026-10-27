@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4341amt5g0fr"
-path="res://.godot/imported/list_C_3.png-9969e16d1fef47530c38d9f62a06d5dd.ctex"
+uid="uid://bk884txcee3oq"
+path="res://.godot/imported/ore_gold_sheet.png-a26aec56de31df21b3fc38bbe869a8e0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/ore_list/list_C_3.png"
-dest_files=["res://.godot/imported/list_C_3.png-9969e16d1fef47530c38d9f62a06d5dd.ctex"]
+source_file="res://assets/sprites/ore/ore_gold_sheet.png"
+dest_files=["res://.godot/imported/ore_gold_sheet.png-a26aec56de31df21b3fc38bbe869a8e0.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cuqgdi5067fms"
-path="res://.godot/imported/unlock_D_vision.png-b2c793da554d050c30658b98bd01781d.ctex"
+uid="uid://b872svrpstupf"
+path="res://.godot/imported/ore_iron_sheet.png-a6a4d821a0d397f9943805ee2ca2f965.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/unlock/unlock_D_vision.png"
-dest_files=["res://.godot/imported/unlock_D_vision.png-b2c793da554d050c30658b98bd01781d.ctex"]
+source_file="res://assets/sprites/ore/ore_iron_sheet.png"
+dest_files=["res://.godot/imported/ore_iron_sheet.png-a6a4d821a0d397f9943805ee2ca2f965.ctex"]
 
 [params]
 

@@ -1,4 +1,4 @@
-// Hud: 아래 띠에 남은 시간, 점수, 배율, 드릴 수와 광석 A~D 해금 게이지 목록을 보여 준다. 시작 때 카운트다운을 돌리고, 끝나면 '게임 종료' 문구 뒤에 결과 화면을 띄워 점수를 서버에 제출한다.
+// Hud: 아래 띠에 남은 시간, 점수, 배율, 드릴 수와 광석 다이아몬드~철광석 해금 게이지 목록을 보여 준다. 시작 때 카운트다운을 돌리고, 끝나면 '게임 종료' 문구 뒤에 결과 화면을 띄워 점수를 서버에 제출한다.
 using Godot;
 using System;
 using System.Text;
@@ -8,7 +8,7 @@ public partial class Hud : Node
 {
 	private const string OreListDir = "res://assets/sprites/ui/ore_list/";
 	private const string UnlockDir = "res://assets/sprites/ui/unlock/";
-	private static readonly string[] UnlockIcon = { "unlock_A_mine_speed", "unlock_B_move_speed", "unlock_C_drill_count", "unlock_D_vision" };
+	private static readonly string[] UnlockEffect = { "mine_speed", "move_speed", "drill_count", "vision" };
 	private const float SpriteScale = 0.25f;
 	private const float GaugeLeftSrc = 68f;
 	private const float RowHeightSrc = 32f;
@@ -36,11 +36,11 @@ public partial class Hud : Node
 	private Button _action;
 	private Action _onAction;
 	private ApiClient _api;
-	private readonly Texture2D[][] _stages = new Texture2D[UnlockIcon.Length][];
-	private readonly Sprite2D[] _rows = new Sprite2D[UnlockIcon.Length];
-	private readonly Sprite2D[] _badges = new Sprite2D[UnlockIcon.Length];
-	private readonly Label[] _nums = new Label[UnlockIcon.Length];
-	private readonly int[] _shown = new int[UnlockIcon.Length];
+	private readonly Texture2D[][] _stages = new Texture2D[UnlockEffect.Length][];
+	private readonly Sprite2D[] _rows = new Sprite2D[UnlockEffect.Length];
+	private readonly Sprite2D[] _badges = new Sprite2D[UnlockEffect.Length];
+	private readonly Label[] _nums = new Label[UnlockEffect.Length];
+	private readonly int[] _shown = new int[UnlockEffect.Length];
 
 	public override void _Ready()
 	{
@@ -86,7 +86,7 @@ public partial class Hud : Node
 		int sec = Mathf.CeilToInt(Round.Remaining);
 		_top.Text = $"TIME {sec / 60}:{sec % 60:00}   SCORE {Score.Score()}   x{Score.BestMultiplier():0.0}";
 		int[] c = Score.Counts;
-		_bottom.Text = $"DRILL {Drills.DrillsLeft}   BOMB {(Drops.HasBomb ? 1 : 0)}   E {c[4]}";
+		_bottom.Text = $"DRILL {Drills.DrillsLeft}   BOMB {(Drops.HasBomb ? 1 : 0)}   {GameData.OreNames[4]} {c[4]}";
 		for (int i = 0; i < _rows.Length; i++)
 		{
 			if (c[i] == _shown[i]) continue;
@@ -100,9 +100,10 @@ public partial class Hud : Node
 		for (int i = 0; i < _rows.Length; i++)
 		{
 			int need = GameData.UnlockNeed[i];
+			string key = GameData.OreKeys[i];
 			_stages[i] = new Texture2D[need];
 			for (int n = 0; n < need; n++)
-				_stages[i][n] = GD.Load<Texture2D>(i == 0 ? OreListDir + "list_A.png" : $"{OreListDir}list_{(OreType)i}_{n + 1}.png");
+				_stages[i][n] = GD.Load<Texture2D>(i == 0 ? $"{OreListDir}list_{key}.png" : $"{OreListDir}list_{key}_{n + 1}.png");
 
 			var cell = new Vector2(OreListX + i / 2 * (CellW + CellGap), OreListY + i % 2 * (CellH + CellGap));
 			_rows[i] = new Sprite2D
@@ -119,7 +120,7 @@ public partial class Hud : Node
 				Centered = false,
 				Scale = Vector2.One * SpriteScale,
 				Position = cell + BadgeOffset,
-				Texture = GD.Load<Texture2D>(UnlockDir + UnlockIcon[i] + ".png")
+				Texture = GD.Load<Texture2D>($"{UnlockDir}unlock_{key}_{UnlockEffect[i]}.png")
 			};
 			AddChild(_badges[i]);
 
@@ -168,7 +169,7 @@ public partial class Hud : Node
 		await ToSignal(GetTree().CreateTimer(GameData.EndBannerSeconds), SceneTreeTimer.SignalName.Timeout);
 		_center.Text = "";
 
-		_summary.Text = $"점수 {score}   x{Score.BestMultiplier():0.0}\n합계 {Score.Sum()}   A{c[0]} B{c[1]} C{c[2]} D{c[3]} E{c[4]}";
+		_summary.Text = $"점수 {score}   x{Score.BestMultiplier():0.0}   합계 {Score.Sum()}\n{OreLine(c)}";
 		_result.Visible = true;
 
 		if (!Session.HasPlay)
@@ -242,6 +243,14 @@ public partial class Hud : Node
 		GetTree().Paused = false;
 		Session.Reset();
 		GetTree().ChangeSceneToFile(Session.TitleScene);
+	}
+
+	private static string OreLine(int[] c)
+	{
+		var parts = new string[c.Length];
+		for (int i = 0; i < c.Length; i++)
+			parts[i] = $"{GameData.OreNames[i]} {c[i]}";
+		return string.Join("  ", parts);
 	}
 
 	private static string Cut(string s, int n)

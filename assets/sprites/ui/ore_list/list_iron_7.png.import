@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1ov5npa7dhm8"
-path="res://.godot/imported/unlock_C_drill_count.png-7f538252dfe92ff54d6ee8dff1be4ed4.ctex"
+uid="uid://cgjwjiy4b15eh"
+path="res://.godot/imported/list_iron_7.png-6d3d78c13cf25a3d124e1a631867c4bb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/unlock/unlock_C_drill_count.png"
-dest_files=["res://.godot/imported/unlock_C_drill_count.png-7f538252dfe92ff54d6ee8dff1be4ed4.ctex"]
+source_file="res://assets/sprites/ui/ore_list/list_iron_7.png"
+dest_files=["res://.godot/imported/list_iron_7.png-6d3d78c13cf25a3d124e1a631867c4bb.ctex"]
 
 [params]
 

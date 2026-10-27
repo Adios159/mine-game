@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fvbvsyxkqie4"
-path="res://.godot/imported/unlock_B_move_speed.png-61e860d5ce5101816ea6736f5ebd0b89.ctex"
+uid="uid://b4341amt5g0fr"
+path="res://.godot/imported/list_gold_3.png-3fb6cf7d472c9daa496f558db0e20dcb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/unlock/unlock_B_move_speed.png"
-dest_files=["res://.godot/imported/unlock_B_move_speed.png-61e860d5ce5101816ea6736f5ebd0b89.ctex"]
+source_file="res://assets/sprites/ui/ore_list/list_gold_3.png"
+dest_files=["res://.godot/imported/list_gold_3.png-3fb6cf7d472c9daa496f558db0e20dcb.ctex"]
 
 [params]
 

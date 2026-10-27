@@ -5,11 +5,11 @@ public partial class ScoreSystem : Node
 {
 	private static readonly (OreType[] Ores, float Mult)[] Combos =
 	{
-		(new[] { OreType.D, OreType.E }, 1.4f),
-		(new[] { OreType.C, OreType.D }, 1.6f),
-		(new[] { OreType.B, OreType.C, OreType.D, OreType.E }, 2.6f),
-		(new[] { OreType.A, OreType.C, OreType.D, OreType.E }, 3.0f),
-		(new[] { OreType.A, OreType.B, OreType.C, OreType.E }, 3.3f)
+		(new[] { OreType.Iron, OreType.Coal }, 1.4f),
+		(new[] { OreType.Gold, OreType.Iron }, 1.6f),
+		(new[] { OreType.Emerald, OreType.Gold, OreType.Iron, OreType.Coal }, 2.6f),
+		(new[] { OreType.Diamond, OreType.Gold, OreType.Iron, OreType.Coal }, 3.0f),
+		(new[] { OreType.Diamond, OreType.Emerald, OreType.Gold, OreType.Coal }, 3.3f)
 	};
 
 	public int[] Counts = new int[5];

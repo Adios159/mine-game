@@ -12,7 +12,7 @@ public partial class Ore : Node2D
 
 	public override void _Ready()
 	{
-		var frames = GD.Load<SpriteFrames>($"res://assets/frames/ore_{Type}.tres");
+		var frames = GD.Load<SpriteFrames>($"res://assets/frames/ore_{GameData.OreKeys[(int)Type]}.tres");
 		var sprite = new AnimatedSprite2D
 		{
 			SpriteFrames = frames,

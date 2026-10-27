@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwisof2n2223x"
-path="res://.godot/imported/unlock_A_mine_speed.png-a47457cfdf4e1d97d9f2ca150d5cc639.ctex"
+uid="uid://bkqpqckiesmq"
+path="res://.godot/imported/list_emerald_1.png-ae6e54a4a1aefcaca6cc9ed577d4719a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/unlock/unlock_A_mine_speed.png"
-dest_files=["res://.godot/imported/unlock_A_mine_speed.png-a47457cfdf4e1d97d9f2ca150d5cc639.ctex"]
+source_file="res://assets/sprites/ui/ore_list/list_emerald_1.png"
+dest_files=["res://.godot/imported/list_emerald_1.png-ae6e54a4a1aefcaca6cc9ed577d4719a.ctex"]
 
 [params]
 

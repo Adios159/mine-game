@@ -1,6 +1,6 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://cwxm70oimd7rr"]
 
-[ext_resource type="Texture2D" uid="uid://sb71ffboksce" path="res://assets/sprites/ore/ore_A_sheet.png" id="1_mmigo"]
+[ext_resource type="Texture2D" uid="uid://sb71ffboksce" path="res://assets/sprites/ore/ore_diamond_sheet.png" id="1_mmigo"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pkanf"]
 atlas = ExtResource("1_mmigo")

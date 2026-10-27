@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2sya544nni5j"
-path="res://.godot/imported/list_B_2.png-8eab2c936d5b659a97d9b3b748672d7f.ctex"
+uid="uid://fvbvsyxkqie4"
+path="res://.godot/imported/unlock_emerald_move_speed.png-a3b3b8c29ddb9ac80c179e1c696dc0d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/ore_list/list_B_2.png"
-dest_files=["res://.godot/imported/list_B_2.png-8eab2c936d5b659a97d9b3b748672d7f.ctex"]
+source_file="res://assets/sprites/ui/unlock/unlock_emerald_move_speed.png"
+dest_files=["res://.godot/imported/unlock_emerald_move_speed.png-a3b3b8c29ddb9ac80c179e1c696dc0d3.ctex"]
 
 [params]
 

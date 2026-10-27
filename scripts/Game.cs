@@ -69,19 +69,19 @@ public partial class Game : Node2D
 	{
 		switch (type)
 		{
-			case OreType.A:
+			case OreType.Diamond:
 				drills.MineSeconds *= 0.75f;
 				GD.Print("[효과] 채굴 시간 ", drills.MineSeconds, "초 (새로 붙이는 드릴부터)");
 				break;
-			case OreType.B:
+			case OreType.Emerald:
 				player.MoveSpeed += GameData.UnlockMoveBonus;
 				GD.Print("[효과] 이동 속도 ", player.MoveSpeed);
 				break;
-			case OreType.C:
+			case OreType.Gold:
 				drills.DrillsLeft += 2;
 				GD.Print("[효과] 드릴 +2, 남은 드릴 ", drills.DrillsLeft);
 				break;
-			case OreType.D:
+			case OreType.Iron:
 				vision.Expand(5f, 1.5f);
 				drills.ReachTiles += 1.5f;
 				GD.Print("[효과] 부채꼴 ", vision.FanLengthTiles, " 원 ", vision.CircleRadiusTiles, " 붙이는 거리 ", drills.ReachTiles);

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbllt4nu662e3"
-path="res://.godot/imported/list_D_6.png-ac8b187edcf4ec4978260ceb26e6b4f9.ctex"
+uid="uid://c1ov5npa7dhm8"
+path="res://.godot/imported/unlock_gold_drill_count.png-23c6b4114976fea6802be755627c3464.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/ore_list/list_D_6.png"
-dest_files=["res://.godot/imported/list_D_6.png-ac8b187edcf4ec4978260ceb26e6b4f9.ctex"]
+source_file="res://assets/sprites/ui/unlock/unlock_gold_drill_count.png"
+dest_files=["res://.godot/imported/unlock_gold_drill_count.png-23c6b4114976fea6802be755627c3464.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1cc5t25pq371"
-path="res://.godot/imported/list_C_5.png-fdc07c4b9c2d4bac67264cca615db220.ctex"
+uid="uid://cwisof2n2223x"
+path="res://.godot/imported/unlock_diamond_mine_speed.png-42cce37199657d798987e098bd0f0f07.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/ore_list/list_C_5.png"
-dest_files=["res://.godot/imported/list_C_5.png-fdc07c4b9c2d4bac67264cca615db220.ctex"]
+source_file="res://assets/sprites/ui/unlock/unlock_diamond_mine_speed.png"
+dest_files=["res://.godot/imported/unlock_diamond_mine_speed.png-42cce37199657d798987e098bd0f0f07.ctex"]
 
 [params]
 

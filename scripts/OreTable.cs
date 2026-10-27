@@ -25,6 +25,6 @@ public static class OreTable
 			acc += table[i];
 			if (r < acc) return (OreType)i;
 		}
-		return OreType.E;
+		return OreType.Coal;
 	}
 }

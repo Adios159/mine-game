@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://df58iyo0r5f0i"
-path="res://.godot/imported/list_D_3.png-a12e015ebfa48c6a7f1879d25e1d265b.ctex"
+uid="uid://cuqgdi5067fms"
+path="res://.godot/imported/unlock_iron_vision.png-54844e0717ab67b37c7ff15289737dc4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/ore_list/list_D_3.png"
-dest_files=["res://.godot/imported/list_D_3.png-a12e015ebfa48c6a7f1879d25e1d265b.ctex"]
+source_file="res://assets/sprites/ui/unlock/unlock_iron_vision.png"
+dest_files=["res://.godot/imported/unlock_iron_vision.png-54844e0717ab67b37c7ff15289737dc4.ctex"]
 
 [params]
 
