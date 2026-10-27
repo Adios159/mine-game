@@ -1,4 +1,4 @@
-// Hud: 아래 띠에 남은 시간, 점수, 배율, 광석 개수, 드릴 수를 보여 준다. 시작 때 카운트다운을 돌리고, 끝나면 '게임 종료' 문구 뒤에 결과 화면을 띄워 점수를 서버에 제출한다.
+// Hud: 아래 띠에 남은 시간, 점수, 배율, 드릴 수와 광석 A~D 해금 게이지 목록을 보여 준다. 시작 때 카운트다운을 돌리고, 끝나면 '게임 종료' 문구 뒤에 결과 화면을 띄워 점수를 서버에 제출한다.
 using Godot;
 using System;
 using System.Text;
@@ -6,6 +6,21 @@ using System.Threading.Tasks;
 
 public partial class Hud : Node
 {
+	private const string OreListDir = "res://assets/sprites/ui/ore_list/";
+	private const string UnlockDir = "res://assets/sprites/ui/unlock/";
+	private static readonly string[] UnlockIcon = { "unlock_A_mine_speed", "unlock_B_move_speed", "unlock_C_drill_count", "unlock_D_vision" };
+	private const float SpriteScale = 0.25f;
+	private const float GaugeLeftSrc = 68f;
+	private const float RowHeightSrc = 32f;
+	private const float CellW = 64f;
+	private const float CellH = 16f;
+	private const float CellGap = 2f;
+	private const float OreListX = 480f - 4f - CellW * 2 - CellGap;
+	private const float OreListY = 230f;
+	private static readonly Vector2 RowOffset = new(0, 4);
+	private static readonly Vector2 NumberOffset = new(8, 2);
+	private static readonly Vector2 BadgeOffset = new(40, 0);
+
 	public RoundSystem Round;
 	public ScoreSystem Score;
 	public DrillController Drills;
@@ -21,6 +36,11 @@ public partial class Hud : Node
 	private Button _action;
 	private Action _onAction;
 	private ApiClient _api;
+	private readonly Texture2D[][] _stages = new Texture2D[UnlockIcon.Length][];
+	private readonly Sprite2D[] _rows = new Sprite2D[UnlockIcon.Length];
+	private readonly Sprite2D[] _badges = new Sprite2D[UnlockIcon.Length];
+	private readonly Label[] _nums = new Label[UnlockIcon.Length];
+	private readonly int[] _shown = new int[UnlockIcon.Length];
 
 	public override void _Ready()
 	{
@@ -29,8 +49,9 @@ public partial class Hud : Node
 		_api = new ApiClient();
 		AddChild(_api);
 
-		_top = MakeLabel(this, new Vector2(4, 227), 12);
-		_bottom = MakeLabel(this, new Vector2(4, 243), 12);
+		_top = MakeLabel(this, new Vector2(4, OreListY + NumberOffset.Y), 12);
+		_bottom = MakeLabel(this, new Vector2(4, OreListY + CellH + CellGap + NumberOffset.Y), 12);
+		MakeOreList();
 
 		_center = MakeLabel(this, Vector2.Zero, 24);
 		_center.Size = new Vector2(GameData.MapWidthPx, GameData.MapHeightPx);
@@ -65,7 +86,60 @@ public partial class Hud : Node
 		int sec = Mathf.CeilToInt(Round.Remaining);
 		_top.Text = $"TIME {sec / 60}:{sec % 60:00}   SCORE {Score.Score()}   x{Score.BestMultiplier():0.0}";
 		int[] c = Score.Counts;
-		_bottom.Text = $"A {c[0]}  B {c[1]}  C {c[2]}  D {c[3]}  E {c[4]}   DRILL {Drills.DrillsLeft}   BOMB {(Drops.HasBomb ? 1 : 0)}";
+		_bottom.Text = $"DRILL {Drills.DrillsLeft}   BOMB {(Drops.HasBomb ? 1 : 0)}   E {c[4]}";
+		for (int i = 0; i < _rows.Length; i++)
+		{
+			if (c[i] == _shown[i]) continue;
+			_shown[i] = c[i];
+			ShowOre(i, c[i]);
+		}
+	}
+
+	private void MakeOreList()
+	{
+		for (int i = 0; i < _rows.Length; i++)
+		{
+			int need = GameData.UnlockNeed[i];
+			_stages[i] = new Texture2D[need];
+			for (int n = 0; n < need; n++)
+				_stages[i][n] = GD.Load<Texture2D>(i == 0 ? OreListDir + "list_A.png" : $"{OreListDir}list_{(OreType)i}_{n + 1}.png");
+
+			var cell = new Vector2(OreListX + i / 2 * (CellW + CellGap), OreListY + i % 2 * (CellH + CellGap));
+			_rows[i] = new Sprite2D
+			{
+				Centered = false,
+				Scale = Vector2.One * SpriteScale,
+				Position = cell + RowOffset,
+				RegionRect = new Rect2(0, 0, Mathf.Min(GaugeLeftSrc, _stages[i][0].GetWidth()), RowHeightSrc)
+			};
+			AddChild(_rows[i]);
+
+			_badges[i] = new Sprite2D
+			{
+				Centered = false,
+				Scale = Vector2.One * SpriteScale,
+				Position = cell + BadgeOffset,
+				Texture = GD.Load<Texture2D>(UnlockDir + UnlockIcon[i] + ".png")
+			};
+			AddChild(_badges[i]);
+
+			_nums[i] = MakeLabel(this, cell + NumberOffset, 12);
+			_nums[i].AddThemeColorOverride("font_color", Colors.White);
+			_nums[i].AddThemeColorOverride("font_outline_color", Colors.Black);
+			_nums[i].AddThemeConstantOverride("outline_size", 2);
+
+			ShowOre(i, 0);
+		}
+	}
+
+	private void ShowOre(int i, int count)
+	{
+		int need = GameData.UnlockNeed[i];
+		bool unlocked = count >= need;
+		_rows[i].Texture = _stages[i][Mathf.Min(count, need - 1)];
+		_rows[i].RegionEnabled = unlocked;
+		_badges[i].Visible = unlocked;
+		_nums[i].Text = count.ToString();
 	}
 
 	// 트리를 멈춘 채 3, 2, 1을 센 뒤 풀어 준다. 타이머는 멈춘 트리에서도 돌아가야 해서 기본값(processAlways)을 그대로 쓴다.
