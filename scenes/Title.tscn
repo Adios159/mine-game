@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c6rse2jh8syue"]
 
 [ext_resource type="Script" uid="uid://c332r17pif85m" path="res://scripts/Title.cs" id="1_ascc0"]
+[ext_resource type="AudioStream" uid="uid://oukk6xp1bstd" path="res://assets/audio/bgm/bgm_menu.ogg" id="2_lq0lj"]
 
 [node name="Title" type="Control" unique_id=81621072]
 layout_mode = 3
@@ -10,3 +11,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ascc0")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=577631758]
+stream = ExtResource("2_lq0lj")
+volume_db = -8.0
+autoplay = true

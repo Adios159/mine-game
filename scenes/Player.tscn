@@ -1,7 +1,70 @@
 [gd_scene format=3 uid="uid://bgplwgy6p7jj2"]
 
-[ext_resource type="Texture2D" uid="uid://c3r5kbikygfuf" path="res://icon.svg" id="1_p0vlq"]
 [ext_resource type="Script" uid="uid://rfaiong3yquc" path="res://scripts/Player.cs" id="1_v6fml"]
+[ext_resource type="Texture2D" uid="uid://k00jgi5q46hn" path="res://assets/sprites/player/player_sheet.png" id="2_v6fml"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3li8b"]
+atlas = ExtResource("2_v6fml")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mdl7e"]
+atlas = ExtResource("2_v6fml")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qu4a1"]
+atlas = ExtResource("2_v6fml")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_70d11"]
+atlas = ExtResource("2_v6fml")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cw2d6"]
+atlas = ExtResource("2_v6fml")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_khinc"]
+atlas = ExtResource("2_v6fml")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bruh7"]
+atlas = ExtResource("2_v6fml")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jeaw1"]
+resource_local_to_scene = true
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3li8b")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mdl7e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qu4a1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_70d11")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cw2d6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_khinc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bruh7")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 10.0
+}]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_a42wu"]
 radius = 5.0
@@ -9,9 +72,10 @@ radius = 5.0
 [node name="Player" type="CharacterBody2D" unique_id=1101318778]
 script = ExtResource("1_v6fml")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1734054201]
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("1_p0vlq")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=715445349]
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_jeaw1")
+animation = &"walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1347175408]
 shape = SubResource("CircleShape2D_a42wu")

@@ -19,6 +19,7 @@ public partial class UnlockSystem : Node
 		if (Need[i] > 0 && !_unlocked[i] && _counts[i] >= Need[i])
 		{
 			_unlocked[i] = true;
+			SoundManager.Instance.Play("sfx_unlock");
 			GD.Print("해금: ", type, " -> ", Effect[i]);
 			Unlocked?.Invoke(type);
 		}

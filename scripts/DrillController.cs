@@ -30,6 +30,7 @@ public partial class DrillController : Node
 			if (n is Drill d && d.Dropped && !d.Collected && d.GlobalPosition.DistanceTo(Player.GlobalPosition) <= PickupRadiusPx)
 			{
 				d.Collected = true;
+				SoundManager.Instance.Play("sfx_drill_pickup");
 				DrillsLeft++;
 				d.QueueFree();
 				GD.Print("드릴 회수, 남은 드릴 ", DrillsLeft);
@@ -62,6 +63,7 @@ public partial class DrillController : Node
 		drill.Finished += OnDrillFinished;
 		drill.Start(best, GD.Randf() < ShinyChance, MineSeconds);
 		best.AttachedDrill = drill;
+		SoundManager.Instance.Play("sfx_drill_attach");
 		GD.Print("드릴 부착, 남은 드릴 ", DrillsLeft, drill.Shiny ? " (반짝)" : "");
 	}
 
@@ -72,6 +74,7 @@ public partial class DrillController : Node
 		rock.Drilling = false;
 		rock.AttachedDrill = null;
 		Drops.SpawnFromStone(rock.GlobalPosition, drill.Shiny);
+		SoundManager.Instance.Play("sfx_mining_done");
 		GD.Print("채굴 완료, 돌덩이에 남은 돌 ", rock.Stones);
 		if (rock.Stones <= 0)
 		{

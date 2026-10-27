@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://narqstyrx631"]
 
-[ext_resource type="Texture2D" uid="uid://c3r5kbikygfuf" path="res://icon.svg" id="1_bpoff"]
 [ext_resource type="Script" uid="uid://c5ictfj7hs2u4" path="res://scripts/Rock.cs" id="1_wmx41"]
+[ext_resource type="Texture2D" uid="uid://c7jjocutmdo64" path="res://assets/sprites/rock/rock.png" id="2_wmx41"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_a42wu"]
 radius = 7.0
@@ -11,8 +11,8 @@ script = ExtResource("1_wmx41")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=236979302]
 modulate = Color(0.61510515, 0.4435417, 0.2596624, 1)
-scale = Vector2(0.12, 0.12)
-texture = ExtResource("1_bpoff")
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("2_wmx41")
 
 [node name="Body" type="StaticBody2D" parent="." unique_id=1238291618]
 collision_layer = 2

@@ -36,6 +36,7 @@ public partial class BombController : Node
 
 		Drops.HasBomb = false;
 		best.Bombed = true;
+		SoundManager.Instance.Play("sfx_bomb_place");
 		best.Modulate = new Color(1f, 0.4f, 0.4f);
 
 		if (best.AttachedDrill != null)
@@ -57,6 +58,7 @@ public partial class BombController : Node
 		int count = Mathf.Min(BombStones, rock.Stones);
 		Vector2 pos = rock.GlobalPosition;
 		rock.QueueFree();
+		SoundManager.Instance.Play("sfx_bomb_explode");
 		for (int i = 0; i < count; i++)
 			Drops.SpawnOre(pos, GD.Randf() < ShinyChance);
 		GD.Print("폭탄 폭발, 광석 ", count, "개");

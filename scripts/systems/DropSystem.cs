@@ -48,6 +48,7 @@ public partial class DropSystem : Node
 			if (n is not Ore o || o.Taken) continue;
 			if (o.GlobalPosition.DistanceTo(Player.GlobalPosition) > PickupRadiusPx) continue;
 			o.Taken = true;
+			SoundManager.Instance.Play("sfx_ore_pickup");
 			OrePicked?.Invoke(o.Type);
 			o.QueueFree();
 		}
@@ -61,11 +62,13 @@ public partial class DropSystem : Node
 			{
 				if (HasBomb) continue;
 				HasBomb = true;
+				SoundManager.Instance.Play("sfx_bomb_pickup");
 				GD.Print("폭탄 획득");
 			}
 			else
 			{
 				PullAllOres();
+				SoundManager.Instance.Play("sfx_magnet_activate");
 				GD.Print("자석 발동");
 			}
 			it.Taken = true;

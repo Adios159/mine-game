@@ -1,0 +1,60 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://do3wmnnh2fwy6"]
+
+[ext_resource type="Texture2D" uid="uid://b1en7yqmbwq4v" path="res://assets/sprites/rock/sparkle_sheet.png" id="1_e50p7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4w0b3"]
+atlas = ExtResource("1_e50p7")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j7hlp"]
+atlas = ExtResource("1_e50p7")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pwms8"]
+atlas = ExtResource("1_e50p7")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ereof"]
+atlas = ExtResource("1_e50p7")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kig6d"]
+atlas = ExtResource("1_e50p7")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7cgnx"]
+atlas = ExtResource("1_e50p7")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_evagn"]
+atlas = ExtResource("1_e50p7")
+region = Rect2(0, 128, 64, 64)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4w0b3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j7hlp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pwms8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ereof")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kig6d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7cgnx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_evagn")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]

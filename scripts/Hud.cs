@@ -90,6 +90,7 @@ public partial class Hud : Node
 		GD.Print($"[결과] A{c[0]} B{c[1]} C{c[2]} D{c[3]} E{c[4]} | 합계 {Score.Sum()} | 배율 {Score.BestMultiplier():0.0} | 점수 {score}");
 
 		_center.Text = "게임 종료";
+		SoundManager.Instance.Play("sfx_game_over");
 		await ToSignal(GetTree().CreateTimer(GameData.EndBannerSeconds), SceneTreeTimer.SignalName.Timeout);
 		_center.Text = "";
 

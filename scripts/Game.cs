@@ -20,7 +20,7 @@ public partial class Game : Node2D
 		};
 		AddChild(floor);
 
-		AddChild(new CanvasModulate { Color = new Color(0.03f, 0.03f, 0.06f) });
+		AddChild(new CanvasModulate { Color = Colors.Black });
 
 		var player = GetNode<Player>("Player");
 		var vision = new Vision();
