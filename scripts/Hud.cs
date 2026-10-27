@@ -1,7 +1,7 @@
-// Hud: 아래 띠에 남은 시간, 점수, 배율, 드릴 수와 광석 다이아몬드~철광석 해금 게이지 목록을 보여 준다. 시작 때 카운트다운을 돌리고, 끝나면 '게임 종료' 문구 뒤에 결과 화면을 띄워 점수를 서버에 제출한다.
+// Hud: 아래 띠에 남은 시간, 점수, 배율, 드릴 수와 광석 다이아몬드~철광석 해금 게이지 목록을 보여 준다. 시작 때 카운트다운을 돌리고, 끝나면 '게임 종료' 문구 뒤에 결과 화면(왼쪽 점수·순위, 오른쪽 점수 구간 그림)을 띄워 점수를 서버에 제출한다.
 using Godot;
 using System;
-using System.Text;
+using System.Globalization;
 using System.Threading.Tasks;
 
 public partial class Hud : Node
@@ -20,6 +20,14 @@ public partial class Hud : Node
 	private static readonly Vector2 RowOffset = new(0, 4);
 	private static readonly Vector2 NumberOffset = new(8, 2);
 	private static readonly Vector2 BadgeOffset = new(40, 0);
+	private const float ResultHalf = 240f;
+	private const float ResultPad = 6f;
+	private const float TierTextY = 28f;
+	private const int OresPerLine = 3;
+	private static readonly Vector2 TierPicPos = new(13, 46);
+	private static readonly Vector2 TierPicSize = new(214, 178);
+	private static readonly Vector2 ActionPos = new(300, 236);
+	private static readonly int[] TopColumns = { 18, 60, 84, 48 };
 
 	public RoundSystem Round;
 	public ScoreSystem Score;
@@ -32,7 +40,9 @@ public partial class Hud : Node
 	private ColorRect _result;
 	private Label _summary;
 	private Label _status;
-	private Label _list;
+	private GridContainer _top10;
+	private Label _tierText;
+	private TextureRect _tierPic;
 	private Button _action;
 	private Action _onAction;
 	private ApiClient _api;
@@ -68,11 +78,45 @@ public partial class Hud : Node
 		};
 		AddChild(_result);
 
-		_summary = MakeLabel(_result, new Vector2(10, 6), 12);
-		_status = MakeLabel(_result, new Vector2(10, 50), 12);
-		_list = MakeLabel(_result, new Vector2(10, 88), 12);
+		var info = new VBoxContainer
+		{
+			Position = new Vector2(ResultPad, ResultPad),
+			Size = new Vector2(ResultHalf - ResultPad * 2, 270 - ResultPad * 2),
+			MouseFilter = Control.MouseFilterEnum.Ignore
+		};
+		info.AddThemeConstantOverride("separation", 4);
+		_result.AddChild(info);
+		_summary = MakeWrapLabel(info);
+		_status = MakeWrapLabel(info);
+		_top10 = new GridContainer { Columns = TopColumns.Length, MouseFilter = Control.MouseFilterEnum.Ignore };
+		_top10.AddThemeConstantOverride("h_separation", 4);
+		_top10.AddThemeConstantOverride("v_separation", 0);
+		info.AddChild(_top10);
 
-		_action = new Button { Position = new Vector2(350, 240), Size = new Vector2(120, 24), Visible = false };
+		var picSide = new ColorRect
+		{
+			Color = Colors.White,
+			Position = new Vector2(ResultHalf, 0),
+			Size = new Vector2(480 - ResultHalf, 270),
+			MouseFilter = Control.MouseFilterEnum.Ignore
+		};
+		_result.AddChild(picSide);
+		_tierText = MakeLabel(picSide, new Vector2(0, TierTextY), 12);
+		_tierText.Size = new Vector2(480 - ResultHalf, 16);
+		_tierText.HorizontalAlignment = HorizontalAlignment.Center;
+		_tierText.AddThemeColorOverride("font_color", Colors.Black);
+		_tierPic = new TextureRect
+		{
+			Position = TierPicPos,
+			Size = TierPicSize,
+			ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize,
+			StretchMode = TextureRect.StretchModeEnum.Scale,
+			TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
+			MouseFilter = Control.MouseFilterEnum.Ignore
+		};
+		picSide.AddChild(_tierPic);
+
+		_action = new Button { Position = ActionPos, Size = new Vector2(120, 24), Visible = false };
 		_action.AddThemeFontSizeOverride("font_size", 12);
 		_action.Pressed += () => _onAction?.Invoke();
 		_result.AddChild(_action);
@@ -169,7 +213,8 @@ public partial class Hud : Node
 		await ToSignal(GetTree().CreateTimer(GameData.EndBannerSeconds), SceneTreeTimer.SignalName.Timeout);
 		_center.Text = "";
 
-		_summary.Text = $"점수 {score}   x{Score.BestMultiplier():0.0}   합계 {Score.Sum()}\n{OreLine(c)}";
+		_summary.Text = $"점수 {Comma(score)}  (합계 {Comma(Score.Sum())} x{Score.BestMultiplier():0.0})\n조합 {ComboLine(c)}\n{OreLine(c)}";
+		ShowTier(GameData.ResultTier(score));
 		_result.Visible = true;
 
 		if (!Session.HasPlay)
@@ -210,19 +255,47 @@ public partial class Hud : Node
 	private void ShowRanking(ApiResult r)
 	{
 		int rank = r.GetInt("rank");
-		string line = $"내 순위 {rank}위 / {r.GetInt("total_players")}명   최고점 {r.GetInt("best_score")}";
+		string line = $"내 순위 {rank}위 / {r.GetInt("total_players")}명  남은 횟수 {r.GetInt("plays_remaining")}/3";
+		line += $"\n최고점 {Comma(r.GetInt("best_score"))}";
 		if (r.GetBool("is_personal_best")) line += "  (최고 기록)";
-		line += $"\n남은 횟수 {r.GetInt("plays_remaining")}/3";
 		_status.Text = line;
 
-		var sb = new StringBuilder();
+		foreach (Node child in _top10.GetChildren())
+		{
+			_top10.RemoveChild(child);
+			child.QueueFree();
+		}
 		foreach (var e in r.GetArray("top"))
 		{
 			int rk = ApiResult.Num(e, "rank");
-			string mark = rk == rank ? "> " : "  ";
-			sb.AppendLine($"{mark}{rk,2}  {Cut(ApiResult.Str(e, "name"), 6)}  {Cut(ApiResult.Str(e, "department"), 10)}  {ApiResult.Num(e, "best_score")}");
+			AddTopRow(new[] { rk.ToString(), ApiResult.Str(e, "name"), ApiResult.Str(e, "department"), Comma(ApiResult.Num(e, "best_score")) }, rk == rank);
 		}
-		_list.Text = sb.ToString();
+	}
+
+	private void AddTopRow(string[] cells, bool mine)
+	{
+		for (int i = 0; i < cells.Length; i++)
+		{
+			var label = new Label
+			{
+				Text = cells[i],
+				CustomMinimumSize = new Vector2(TopColumns[i], 0),
+				ClipText = true,
+				MouseFilter = Control.MouseFilterEnum.Ignore
+			};
+			label.AddThemeFontSizeOverride("font_size", 12);
+			if (i == 0 || i == cells.Length - 1) label.HorizontalAlignment = HorizontalAlignment.Right;
+			if (mine) label.Modulate = new Color(1f, 0.85f, 0.3f);
+			_top10.AddChild(label);
+		}
+	}
+
+	private void ShowTier(int tier)
+	{
+		string path = string.Format(GameData.ResultTierPath, tier);
+		_tierText.Text = GameData.ResultTierTexts[tier - 1];
+		_tierPic.Texture = ResourceLoader.Exists(path) ? GD.Load<Texture2D>(path) : null;
+		if (_tierPic.Texture == null) GD.PushWarning($"[결과] 그림을 읽지 못했습니다: {path}");
 	}
 
 	private void SetAction(string text, Action action)
@@ -250,12 +323,33 @@ public partial class Hud : Node
 		var parts = new string[c.Length];
 		for (int i = 0; i < c.Length; i++)
 			parts[i] = $"{GameData.OreNames[i]} {c[i]}";
-		return string.Join("  ", parts);
+		return string.Join("  ", parts, 0, OresPerLine) + "\n" + string.Join("  ", parts, OresPerLine, parts.Length - OresPerLine);
 	}
 
-	private static string Cut(string s, int n)
+	private static string ComboLine(int[] c)
 	{
-		return s.Length <= n ? s : s.Substring(0, n);
+		int best = 0;
+		int mask = 0;
+		foreach (var combo in GameData.Combos)
+		{
+			bool ok = true;
+			for (int i = 0; i < c.Length; i++)
+				if ((combo.Mask & (1 << i)) != 0 && c[i] < 1) ok = false;
+			if (ok && combo.Tenths > best) { best = combo.Tenths; mask = combo.Mask; }
+		}
+		return mask == 0 ? "없음" : GameData.ComboName(mask);
+	}
+
+	private static string Comma(int n)
+	{
+		return n.ToString("N0", CultureInfo.InvariantCulture);
+	}
+
+	private static Label MakeWrapLabel(Node parent)
+	{
+		var label = MakeLabel(parent, Vector2.Zero, 12);
+		label.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+		return label;
 	}
 
 	private static Label MakeLabel(Node parent, Vector2 pos, int fontSize)

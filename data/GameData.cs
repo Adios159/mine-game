@@ -71,6 +71,20 @@ public static class GameData
 	};
 
 
+	public const int ResultTierStep = 25000;
+	public const int ResultTierCount = 4;
+	public const string ResultTierPath = "res://assets/sprites/ui/result/result_tier{0}.png";
+	public static readonly string[] ResultTierTexts =
+	{
+		"당신은 돌 몇개 밖에 건지지 못했습니다...",
+		"당신은 돈을 꽤 벌었습니다. 수고했어요!",
+		"당신은 황금도토리의 주인이 되었습니다!",
+		"당신은 세계의 부호가 되었습니다!",
+	};
+
+	public static int ResultTier(int score) => System.Math.Min(score / ResultTierStep, ResultTierCount - 1) + 1;
+
+
 	// 마스크를 "에메랄드+금광석+철광석+석탄" 같은 글자로 바꾼다. 조합이 없으면 빈 문자열
 	public static string ComboName(int mask)
 	{

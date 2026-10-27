@@ -1,4 +1,4 @@
-// Title: 첫 화면. 게임 시작, 랭킹 보기, 게임 설명 메뉴를 두고, 게임 시작을 누르면 학번, 이름, 학과 입력 화면에서 입력 확인과 판 시작을 처리한 뒤 게임 씬으로 넘어간다.
+// Title: 첫 화면. 로고가 그려진 배경 그림 위에 게임 시작, 랭킹 보기, 게임 설명 메뉴를 두고, 게임 시작을 누르면 학번, 이름, 학과 입력 화면에서 입력 확인과 판 시작을 처리한 뒤 게임 씬으로 넘어간다.
 using Godot;
 using System;
 using System.Globalization;
@@ -49,7 +49,8 @@ WASD: 이동
 중간에 끈 판도 횟수가 차감됩니다. 점수가 같으면 먼저 달성한 사람이 위입니다.";
 
 	private const int FontSize = 12;
-	private const int BigFontSize = 24;
+	private const string BackgroundPath = "res://assets/sprites/ui/title/title_screen.png";
+	private const float PanelTop = 100f;
 
 	private static readonly int[] RankColumns = { 36, 80, 150, 70, 80 };
 
@@ -92,6 +93,7 @@ WASD: 이동
 		_api = new ApiClient();
 		AddChild(_api);
 
+		BuildBackground();
 		BuildMain();
 		BuildEntry();
 		BuildRank();
@@ -101,17 +103,29 @@ WASD: 이동
 		_ = CheckServer();
 	}
 
+	private void BuildBackground()
+	{
+		var background = new TextureRect
+		{
+			Position = Vector2.Zero,
+			Size = new Vector2(480, 270),
+			ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize,
+			StretchMode = TextureRect.StretchModeEnum.Scale,
+			TextureFilter = TextureFilterEnum.Nearest,
+			MouseFilter = MouseFilterEnum.Ignore,
+			Texture = ResourceLoader.Exists(BackgroundPath) ? GD.Load<Texture2D>(BackgroundPath) : null
+		};
+		if (background.Texture == null) GD.PushWarning($"[타이틀] 배경 그림을 읽지 못했습니다: {BackgroundPath}");
+		AddChild(background);
+	}
+
 	private void BuildMain()
 	{
 		_main = MakePanel();
 
-		var title = MakeLabel(_main, "광물 채굴 게임", new Vector2(0, 36), BigFontSize);
-		title.Size = new Vector2(480, 32);
-		title.HorizontalAlignment = HorizontalAlignment.Center;
-
-		_startMain = MakeButton(_main, "게임 시작", new Vector2(170, 92), new Vector2(140, 28));
-		var rank = MakeButton(_main, "랭킹 보기", new Vector2(170, 128), new Vector2(140, 28));
-		var help = MakeButton(_main, "게임 설명", new Vector2(170, 164), new Vector2(140, 28));
+		_startMain = MakeButton(_main, "게임 시작", new Vector2(320, 92), new Vector2(140, 28));
+		var rank = MakeButton(_main, "랭킹 보기", new Vector2(320, 128), new Vector2(140, 28));
+		var help = MakeButton(_main, "게임 설명", new Vector2(320, 164), new Vector2(140, 28));
 		_startMain.Disabled = true;
 
 		_server = MakeLabel(_main, "", new Vector2(10, 250), FontSize);
@@ -133,19 +147,20 @@ WASD: 이동
 		title.HorizontalAlignment = HorizontalAlignment.Center;
 		var back = MakeButton(_entry, "뒤로", new Vector2(10, 4), new Vector2(60, 22));
 
-		MakeLabel(_entry, "학번", new Vector2(60, 64), FontSize);
-		MakeLabel(_entry, "이름", new Vector2(60, 94), FontSize);
-		MakeLabel(_entry, "학과", new Vector2(60, 124), FontSize);
-		_id = MakeInput(_entry, "숫자 8자리", new Vector2(120, 60), new Vector2(240, 26), 8);
-		_name = MakeInput(_entry, "이름", new Vector2(120, 90), new Vector2(240, 26), 30);
-		_dept = MakeInput(_entry, "학과", new Vector2(120, 120), new Vector2(240, 26), 50);
+		MakeLabel(_entry, "학번", new Vector2(220, 148), FontSize);
+		MakeLabel(_entry, "이름", new Vector2(220, 178), FontSize);
+		MakeLabel(_entry, "학과", new Vector2(220, 208), FontSize);
+		_id = MakeInput(_entry, "숫자 8자리", new Vector2(252, 144), new Vector2(210, 26), 8);
+		_name = MakeInput(_entry, "이름", new Vector2(252, 174), new Vector2(210, 26), 30);
+		_dept = MakeInput(_entry, "학과", new Vector2(252, 204), new Vector2(210, 26), 50);
 
-		_check = MakeButton(_entry, "입력 확인", new Vector2(120, 156), new Vector2(110, 24));
-		_start = MakeButton(_entry, "게임 시작", new Vector2(250, 156), new Vector2(110, 24));
+		_check = MakeButton(_entry, "입력 확인", new Vector2(252, 238), new Vector2(100, 24));
+		_start = MakeButton(_entry, "게임 시작", new Vector2(362, 238), new Vector2(100, 24));
 		_start.Disabled = true;
-		_message = MakeLabel(_entry, "", new Vector2(40, 190), FontSize);
-		_message.Size = new Vector2(400, 70);
+		_message = MakeLabel(_entry, "", new Vector2(210, 36), FontSize);
+		_message.Size = new Vector2(260, 102);
 		_message.HorizontalAlignment = HorizontalAlignment.Center;
+		_message.VerticalAlignment = VerticalAlignment.Bottom;
 		_message.AutowrapMode = TextServer.AutowrapMode.WordSmart;
 
 		back.Pressed += () => ShowPanel(_main);
@@ -172,15 +187,15 @@ WASD: 이동
 		_rankId = MakeInput(_rank, "내 순위를 보려면 학번 입력", new Vector2(44, 28), new Vector2(190, 22), 8);
 		_rankLoad = MakeButton(_rank, "조회", new Vector2(240, 28), new Vector2(60, 22));
 
-		var header = new GridContainer { Columns = RankColumns.Length, Position = new Vector2(10, 54) };
+		var header = new GridContainer { Columns = RankColumns.Length, Position = new Vector2(10, PanelTop) };
 		header.AddThemeConstantOverride("h_separation", 6);
 		_rank.AddChild(header);
 		AddRankRow(header, new[] { "순위", "이름", "학과", "학번", "점수" }, false);
 
 		_rankScroll = new ScrollContainer
 		{
-			Position = new Vector2(10, 70),
-			Size = new Vector2(460, 160),
+			Position = new Vector2(10, PanelTop + 16),
+			Size = new Vector2(460, 112),
 			HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled
 		};
 		_rankGrid = new GridContainer { Columns = RankColumns.Length };
@@ -210,8 +225,8 @@ WASD: 이동
 
 		var scroll = new ScrollContainer
 		{
-			Position = new Vector2(10, 32),
-			Size = new Vector2(460, 230),
+			Position = new Vector2(10, PanelTop),
+			Size = new Vector2(460, 162),
 			HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled
 		};
 		var text = new Label
